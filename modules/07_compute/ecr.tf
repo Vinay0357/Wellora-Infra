@@ -7,11 +7,10 @@ locals {
 }
 
 resource "aws_ecr_repository" "app_repos" {
-  # Create a repo for each name in the list
-  count = local.ecr_enabled ? length(var.ecr_repository_names) : 0
+  for_each = local.ecr_enabled ? { for repo in var.ecr_repository_names : repo => repo } : {}
 
   # Construct name: project/env/repo_base_name (e.g., wellora/prod/frontend-app)
-  name = lower("${var.project_name}/${var.environment}/${var.ecr_repository_names[count.index]}")
+  name = lower("${var.project_name}/${var.environment}/${each.key}")
 
   image_tag_mutability = var.ecr_image_tag_mutability
 
@@ -23,7 +22,8 @@ resource "aws_ecr_repository" "app_repos" {
   # lifecycle_policy = jsonencode({ ... })
 
   tags = merge(var.common_tags, {
-    Name    = lower("${var.project_name}-${var.environment}-${var.ecr_repository_names[count.index]}")
+    Name    = lower("${var.project_name}-${var.environment}-${each.key}")
     Module  = "compute-ecr"
   })
 }
+

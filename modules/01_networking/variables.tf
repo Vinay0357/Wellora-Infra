@@ -8,34 +8,6 @@ variable "aws_region" {
   default     = "ap-southeast-2" # Defaulting to Sydney based on requirement
 }
 
-variable "project_name" {
-  description = "A name for the project to prefix resources"
-  type        = string
-  default     = "wellora"
-}
-
-variable "environment" {
-  description = "Deployment environment (e.g., dev, staging, prod)"
-  type        = string
-  default     = "prod" # Assuming prod for now, can be overridden
-}
-
-variable "vpc_cidr" {
-  description = "The primary CIDR block for the VPC"
-  type        = string
-  default     = "10.98.0.0/16"
-}
-
-variable "availability_zones" {
-  description = "List of Availability Zones to use"
-  type        = list(string)
-  default = ["ap-southeast-2a", "ap-southeast-2b", "ap-southeast-2c"]
-
-  # Note: It's often better to let AWS choose AZs or pass specific ones like:
-  # default = ["ap-southeast-2a", "ap-southeast-2b", "ap-southeast-2c"]
-  # Using data source in main.tf to get available zones is more flexible if specific zones aren't required.
-}
-
 variable "public_subnet_cidrs" {
   description = "List of CIDR blocks for the public subnets (one per AZ)"
   type        = list(string)
@@ -58,6 +30,36 @@ variable "enable_nat_gateway" {
   description = "Should NAT Gateways be created (requires public subnets)"
   type        = bool
   default     = true
+}
+
+variable "project_name" {
+  description = "A name for the project to prefix resources"
+  type        = string
+  default     = "wellora"
+}
+
+variable "environment" {
+  description = "Deployment environment (e.g., dev, staging, prod)"
+  type        = string
+  default     = "prod" # Assuming prod for now, can be overridden
+}
+
+variable "vpc_cidr" {
+  description = "The primary CIDR block for the VPC"
+  type        = string
+  default     = "10.98.0.0/16"
+}
+
+variable "availability_zones" {
+  description = "List of Availability Zones to use. If empty, will fetch available AZs dynamically."
+  type        = list(string)
+  default     = []
+}
+
+variable "number_of_azs_to_use" {
+  description = "Number of AZs to use from the available list"
+  type        = number
+  default     = 3
 }
 
 variable "single_nat_gateway" {

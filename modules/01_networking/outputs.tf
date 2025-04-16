@@ -19,17 +19,17 @@ output "availability_zones_used" {
 
 output "public_subnet_ids" {
   description = "List of IDs of the public subnets"
-  value       = aws_subnet.public[*].id
+  value       = values(aws_subnet.public)[*].id
 }
 
 output "private_app_subnet_ids" {
   description = "List of IDs of the private application subnets"
-  value       = aws_subnet.private_app[*].id
+  value       = values(aws_subnet.private_app)[*].id
 }
 
 output "private_db_subnet_ids" {
   description = "List of IDs of the private database subnets"
-  value       = aws_subnet.private_db[*].id
+  value       = values(aws_subnet.private_db)[*].id
 }
 
 output "public_route_table_id" {
@@ -39,7 +39,7 @@ output "public_route_table_id" {
 
 output "private_route_table_ids" {
   description = "List of IDs of the private route tables (one per AZ)"
-  value       = aws_route_table.private[*].id
+  value       = values(aws_route_table.private)[*].id
 }
 
 output "internet_gateway_id" {
@@ -49,10 +49,10 @@ output "internet_gateway_id" {
 
 output "nat_gateway_ids" {
   description = "List of IDs of the NAT Gateways created (if enabled)"
-  value       = var.enable_nat_gateway ? aws_nat_gateway.nat_gw[*].id : []
+  value       = var.enable_nat_gateway ? values(aws_nat_gateway.nat_gw)[*].id : []
 }
 
 output "nat_gateway_public_ips" {
   description = "List of Public IPs assigned to the NAT Gateways (if enabled)"
-  value       = var.enable_nat_gateway ? aws_eip.nat_eip[*].public_ip : []
+  value       = var.enable_nat_gateway ? values(aws_eip.nat_eip)[*].public_ip : []
 }
