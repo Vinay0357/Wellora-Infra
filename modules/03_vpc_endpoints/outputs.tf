@@ -34,14 +34,14 @@ output "dynamodb_gateway_endpoint_id" {
 output "interface_endpoint_ids" {
   description = "Map of created Interface Endpoint IDs"
   value = {
-    transcribe  = length(aws_vpc_endpoint.transcribe) > 0 ? aws_vpc_endpoint.transcribe[0].id : null
-    bedrock     = length(aws_vpc_endpoint.bedrock) > 0 ? aws_vpc_endpoint.bedrock[0].id : null
-    healthlake  = length(aws_vpc_endpoint.healthlake) > 0 ? aws_vpc_endpoint.healthlake[0].id : null
-    ecr_api     = length(aws_vpc_endpoint.ecr_api) > 0 ? aws_vpc_endpoint.ecr_api[0].id : null
-    ecr_dkr     = length(aws_vpc_endpoint.ecr_dkr) > 0 ? aws_vpc_endpoint.ecr_dkr[0].id : null
-    logs        = length(aws_vpc_endpoint.logs) > 0 ? aws_vpc_endpoint.logs[0].id : null
-    ssm         = length(aws_vpc_endpoint.ssm) > 0 ? aws_vpc_endpoint.ssm[0].id : null
-    ssmmessages = length(aws_vpc_endpoint.ssmmessages) > 0 ? aws_vpc_endpoint.ssmmessages[0].id : null
-    ec2messages = length(aws_vpc_endpoint.ec2messages) > 0 ? aws_vpc_endpoint.ec2messages[0].id : null
+    transcribe   = length(aws_vpc_endpoint.transcribe) > 0 ? aws_vpc_endpoint.transcribe[0].id : null
+    bedrock      = length(aws_vpc_endpoint.bedrock) > 0 ? aws_vpc_endpoint.bedrock[0].id : null
+    healthlake   = length(aws_vpc_endpoint.healthlake) > 0 ? aws_vpc_endpoint.healthlake[0].id : null
+    ecr_api      = length(aws_vpc_endpoint.ecr_api) > 0 ? aws_vpc_endpoint.ecr_api[0].id : null
+    ecr_dkr      = length(aws_vpc_endpoint.ecr_dkr) > 0 ? aws_vpc_endpoint.ecr_dkr[0].id : null
+    logs         = length(aws_vpc_endpoint.logs) > 0 ? aws_vpc_endpoint.logs[0].id : null
+    ssm          = length(aws_vpc_endpoint.ssm) > 0 ? aws_vpc_endpoint.ssm[0].id : null
+    ssmmessages  = length(aws_vpc_endpoint.ssmmessages) > 0 ? aws_vpc_endpoint.ssmmessages[0].id : null
+    ec2messages  = length(aws_vpc_endpoint.ec2messages) > 0 ? aws_vpc_endpoint.ec2messages[0].id : null
   }
 }
