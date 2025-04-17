@@ -1,87 +1,70 @@
-# -----------------------------------------------------------------------------
-# variables for the networking module
-# -----------------------------------------------------------------------------
-
 variable "aws_region" {
   description = "AWS region where resources will be created"
   type        = string
-  default     = "ap-southeast-2" # Defaulting to Sydney based on requirement
-}
-
-variable "public_subnet_cidrs" {
-  description = "List of CIDR blocks for the public subnets (one per AZ)"
-  type        = list(string)
-  default     = ["10.98.1.0/24", "10.98.2.0/24", "10.98.3.0/24"]
-}
-
-variable "private_app_subnet_cidrs" {
-  description = "List of CIDR blocks for the private application subnets (one per AZ)"
-  type        = list(string)
-  default     = ["10.98.10.0/23", "10.98.12.0/23", "10.98.14.0/23"]
-}
-
-variable "private_db_subnet_cidrs" {
-  description = "List of CIDR blocks for the private database subnets (one per AZ)"
-  type        = list(string)
-  default     = ["10.98.20.0/24", "10.98.21.0/24", "10.98.22.0/24"]
-}
-
-variable "enable_nat_gateway" {
-  description = "Should NAT Gateways be created (requires public subnets)"
-  type        = bool
-  default     = true
 }
 
 variable "project_name" {
   description = "A name for the project to prefix resources"
   type        = string
-  default     = "wellora"
 }
 
 variable "environment" {
   description = "Deployment environment (e.g., dev, staging, prod)"
   type        = string
-  default     = "prod" # Assuming prod for now, can be overridden
 }
 
 variable "vpc_cidr" {
-  description = "The primary CIDR block for the VPC"
+  description = "Primary CIDR block for the VPC"
   type        = string
-  default     = "10.98.0.0/16"
 }
 
 variable "availability_zones" {
-  description = "List of Availability Zones to use. If empty, will fetch available AZs dynamically."
+  description = "List of AZs to use. If empty, will fetch dynamically."
   type        = list(string)
   default     = []
 }
 
 variable "number_of_azs_to_use" {
-  description = "Number of AZs to use from the available list"
+  description = "Number of AZs to select"
   type        = number
-  default     = 3
+}
+
+variable "public_subnet_cidrs" {
+  description = "CIDRs for public subnets"
+  type        = list(string)
+}
+
+variable "private_app_subnet_cidrs" {
+  description = "CIDRs for private application subnets"
+  type        = list(string)
+}
+
+variable "private_db_subnet_cidrs" {
+  description = "CIDRs for private database subnets"
+  type        = list(string)
+}
+
+variable "enable_nat_gateway" {
+  description = "Enable NAT Gateway?"
+  type        = bool
 }
 
 variable "single_nat_gateway" {
-  description = "Set to true to create only one NAT Gateway (not recommended for prod)"
+  description = "Single NAT gateway?"
   type        = bool
-  default     = false # Default is one NAT Gateway per AZ for HA
 }
 
 variable "enable_dns_hostnames" {
-  description = "Enable DNS hostnames in the VPC"
+  description = "Enable DNS hostnames?"
   type        = bool
-  default     = true
 }
 
 variable "enable_dns_support" {
-  description = "Enable DNS support in the VPC"
+  description = "Enable DNS support?"
   type        = bool
-  default     = true
 }
 
 variable "common_tags" {
-  description = "Common tags to apply to all resources"
+  description = "Tags to apply"
   type        = map(string)
-  default     = {}
 }

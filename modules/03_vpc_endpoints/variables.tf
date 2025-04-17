@@ -94,3 +94,21 @@ variable "common_tags" {
   type        = map(string)
   default     = {}
 }
+
+
+variable "interface_endpoints_enabled" {
+  description = "Map of interface endpoints to enable"
+  type        = map(bool)
+  default     = {
+    transcribe  = false
+    bedrock     = false
+    healthlake  = false
+    ecr_api     = false
+    ecr_dkr     = false
+    logs        = false
+    s3_interface = false
+    ssm         = false
+    ssmmessages = false
+    ec2messages = false
+  }
+}

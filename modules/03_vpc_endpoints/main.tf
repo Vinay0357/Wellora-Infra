@@ -1,6 +1,6 @@
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # VPC Endpoints Module - Refactored with for_each
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 locals {
   module_tags = merge(
@@ -31,33 +31,6 @@ locals {
     key => value if value
   }
 }
-
-variable "interface_endpoints_enabled" {
-  description = "Map of interface endpoint names and whether to enable them"
-  type = map(bool)
-  default = {
-    transcribe    = false
-    bedrock       = false
-    healthlake    = false
-    ecr_api       = false
-    ecr_dkr       = false
-    logs          = false
-    ssm           = false
-    ssmmessages   = false
-    ec2messages   = false
-  }
-}
-
-variable "create_s3_gateway_endpoint" {
-  type    = bool
-  default = false
-}
-
-variable "create_dynamodb_gateway_endpoint" {
-  type    = bool
-  default = false
-}
-
 
 # --- Security Group for Interface Endpoints ---
 resource "aws_security_group" "vpc_endpoint_sg" {

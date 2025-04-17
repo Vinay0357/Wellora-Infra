@@ -1,73 +1,66 @@
 # -----------------------------------------------------------------------------
-# Input variables for the security_groups module
+# Input variables for security_groups module
 # -----------------------------------------------------------------------------
 
 variable "aws_region" {
-  description = "AWS region where resources will be created"
+  description = "AWS region for resources"
   type        = string
-  default     = "ap-southeast-2" # Defaulting to Sydney based on requirement
+  default     = "ap-southeast-2"
 }
 
 variable "project_name" {
-  description = "A name for the project to prefix resources"
+  description = "Project name prefix"
   type        = string
 }
 
 variable "environment" {
-  description = "Deployment environment (e.g., dev, staging, prod)"
+  description = "Deployment environment"
   type        = string
 }
 
 variable "vpc_id" {
-  description = "The ID of the VPC where the security groups will be created"
+  description = "VPC ID"
   type        = string
 }
 
-# --- Port Configuration ---
-# These can be customized based on actual application needs
-
 variable "alb_ingress_ports" {
-  description = "List of ports the ALB should allow ingress traffic on from the internet"
+  description = "ALB allowed ingress ports"
   type        = list(number)
-  default     = [80, 443] # Default HTTP and HTTPS
+  default     = [80, 443]
 }
 
 variable "app_port" {
-  description = "The primary port the application instances listen on (e.g., for traffic from ALB)"
+  description = "Application service port"
   type        = number
-  default     = 8080 # Example application port
+  default     = 8080
 }
 
 variable "db_port" {
-  description = "The port the database instances listen on (e.g., 5432 for PostgreSQL, 3306 for MySQL, 6379 for Redis)"
+  description = "Database port"
   type        = number
-  default     = 5432 # Example: PostgreSQL
+  default     = 5432
 }
 
 variable "ssh_port" {
-  description = "SSH port, typically used for bastion/admin access"
+  description = "SSH port for admin access"
   type        = number
   default     = 22
 }
 
-# --- Access Control ---
-
 variable "allow_all_internet_ingress_for_alb" {
-  description = "Set to true to allow 0.0.0.0/0 and ::/0 on ALB ingress ports. Set to false to restrict to specific CIDRs if needed."
+  description = "Whether ALB allows 0.0.0.0/0"
   type        = bool
   default     = true
 }
 
 variable "admin_access_cidrs" {
-  description = "List of CIDR blocks allowed for administrative access (e.g., SSH to specific instances, VPN CIDR). This will ideally come from the VPN module later."
+  description = "Admin access CIDRs"
   type        = list(string)
-  default     = [] # Default to empty, should be populated (e.g. ["YOUR_VPN_CIDR/_PREFIX"])
+  default     = []
 }
 
-# --- Tags ---
-
 variable "common_tags" {
-  description = "Common tags to apply to all security groups"
+  description = "Common tags"
   type        = map(string)
   default     = {}
 }

@@ -19,27 +19,33 @@ provider "aws" {
 }
 
 # --- Call the Networking Module ---
-module "networking" {
-  source = "./modules/01_networking" # Path to the module
+# --- Call 01_networking module ---
+module "vpc" {
+  source      = "./01_networking"
+  aws_region  = var.aws_region
+  project_name = var.project_name
+  environment  = var.environment
 
-  # Pass required variables (or rely on defaults if suitable)
-  aws_region      = var.aws_region
-  project_name    = var.project_name
-  environment     = var.environment
-  availability_zones = []
-  # vpc_cidr        = "10.98.0.0/16" # Can override defaults if needed
-  # availability_zones = var.availability_zones # Pass specific AZs if defined
+  vpc_cidr = "10.98.0.0/16"
+  public_subnet_cidrs = [
+    "10.98.1.0/24",
+    "10.98.2.0/24",
+    "10.98.3.0/24"
+  ]
+  private_app_subnet_cidrs = [
+    "10.98.10.0/23",
+    "10.98.12.0/23",
+    "10.98.14.0/23"
+  ]
+  private_db_subnet_cidrs = [
+    "10.98.20.0/24",
+    "10.98.21.0/24",
+    "10.98.22.0/24"
+  ]
 
-  # Example of passing common tags
-  # common_tags = {
-  #   Owner = "DevTeam"
-  #   CostCenter = "12345"
-  # }
+  azs = ["ap-southeast-2a", "ap-southeast-2b", "ap-southeast-2c"]
 
-  # Keep NAT Gateway enabled (default)
-  # enable_nat_gateway = true
-  # Use one NAT Gateway per AZ (default)
-  # single_nat_gateway = false
+  common_tags = local.common_tags
 }
 
 # --- Call the Security Groups Module ---

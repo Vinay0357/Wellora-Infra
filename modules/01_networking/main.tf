@@ -105,11 +105,11 @@ resource "aws_internet_gateway" "gw" {
   })
 }
 
-# --- NAT Gateways & EIPs ---
+# --- NAT Gateway EIPs ---
 resource "aws_eip" "nat_eip" {
   for_each = var.enable_nat_gateway ? (
-  var.single_nat_gateway ? { "single" = "single" } : { for az in local.azs : az => az }
-) : {}
+    var.single_nat_gateway ? { "single" = "single" } : { for az in local.azs : az => az }
+  ) : {}
 
   domain     = "vpc"
   depends_on = [aws_internet_gateway.gw]
@@ -119,6 +119,7 @@ resource "aws_eip" "nat_eip" {
   })
 }
 
+# --- NAT Gateways ---
 resource "aws_nat_gateway" "nat_gw" {
   for_each = aws_eip.nat_eip
 
@@ -129,7 +130,6 @@ resource "aws_nat_gateway" "nat_gw" {
     Name = var.single_nat_gateway ? "${var.project_name}-${var.environment}-nat-gw-single" : "${var.project_name}-${var.environment}-nat-gw-${substr(each.key, -1, 1)}"
   })
 }
-
 
 # --- Route Tables ---
 resource "aws_route_table" "public" {
@@ -154,7 +154,7 @@ resource "aws_route_table" "private" {
   dynamic "route" {
     for_each = var.enable_nat_gateway ? [1] : []
     content {
-      cidr_block = "0.0.0.0/0"
+      cidr_block     = "0.0.0.0/0"
       nat_gateway_id = var.single_nat_gateway ? aws_nat_gateway.nat_gw["single"].id : aws_nat_gateway.nat_gw[each.key].id
     }
   }
