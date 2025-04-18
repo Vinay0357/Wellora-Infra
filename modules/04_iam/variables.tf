@@ -1,9 +1,15 @@
 # -----------------------------------------------------------------------------
-# Input variables for the iam module
+# Input variables for the IAM module
 # -----------------------------------------------------------------------------
 
+variable "aws_region" {
+  description = "AWS region for resources"
+  type        = string
+  default     = "ap-southeast-2"
+}
+
 variable "project_name" {
-  description = "A name for the project to prefix resources"
+  description = "Project name prefix"
   type        = string
 }
 
@@ -16,7 +22,32 @@ variable "environment" {
 variable "create_eks_roles" {
   description = "Set to true to create EKS Cluster and Node roles"
   type        = bool
-  default     = true # Assuming EKS is used based on diagram
+  default     = true
+}
+
+variable "eks_roles" {
+  description = "Map of EKS cluster roles to create"
+  type = map(object({
+    rolename = string
+  }))
+  default = {
+    eks_cluster_role1 = {
+      rolename = "eks-cluster-role"
+    }
+  }
+}
+
+variable "eks_node_roles" {
+  description = "Map of EKS node roles to create"
+  type = map(object({
+    rolename = string
+  }))
+  default = {
+    eks_node_role1 = {
+      # rolename = "${var.project_name}-${var.environment}-eks-node-role"
+      rolename = "eks-node-role"
+    }
+  }
 }
 
 variable "create_app_task_role" {
@@ -28,62 +59,71 @@ variable "create_app_task_role" {
 variable "attach_ssm_policy_to_nodes" {
   description = "Set to true to attach AmazonSSMManagedInstanceCore policy to EKS Node role"
   type        = bool
-  default     = true # Recommended for management via SSM
+  default     = true
 }
 
 variable "attach_cloudwatch_agent_policy_to_nodes" {
   description = "Set to true to attach CloudWatchAgentServerPolicy policy to EKS Node role"
   type        = bool
-  default     = false # Enable if using CloudWatch agent for detailed metrics/logs
+  default     = false
 }
-
-# --- External Resource Identifiers (to be passed from other modules) ---
 
 variable "oidc_provider_arn" {
   description = "ARN of the EKS OIDC Provider (required for IRSA - IAM Roles for Service Accounts)"
   type        = string
-  default     = "" # Must be provided by the EKS module if using IRSA
+  default     = ""
 }
 
 variable "oidc_provider_url" {
   description = "URL of the EKS OIDC Provider (required for IRSA assume role policy)"
   type        = string
-  default     = "" # Must be provided by the EKS module if using IRSA (strip https://)
+  default     = ""
 }
 
 variable "s3_general_bucket_arns" {
-  description = "List of ARNs for general S3 buckets the application needs access to (e.g., raw audio, transcripts)"
+  description = "List of ARNs for general S3 buckets the application needs access to"
   type        = list(string)
-  default     = [] # e.g., ["arn:aws:s3:::wellora-prod-raw-audio", "arn:aws:s3:::wellora-prod-transcripts"]
+  default     = []
 }
 
 variable "s3_static_assets_bucket_arn" {
-  description = "ARN of the S3 bucket for static assets (may need different permissions)"
+  description = "ARN of the S3 bucket for static assets"
   type        = string
-  default     = "" # e.g., "arn:aws:s3:::wellora-prod-static-assets"
+  default     = ""
 }
 
 variable "dynamodb_table_arns" {
   description = "List of ARNs for DynamoDB tables the application needs access to"
   type        = list(string)
-  default     = [] # e.g., ["arn:aws:dynamodb:ap-southeast-2:123456789012:table/WelloraAppData"]
+  default     = []
 }
 
 variable "kms_key_arns_for_encryption" {
-  description = "List of KMS Key ARNs used for encrypting/decrypting data (e.g., S3, HealthLake)"
+  description = "List of KMS Key ARNs used for encrypting/decrypting data"
   type        = list(string)
-  default     = [] # Provide specific key ARNs if using CMKs
+  default     = []
 }
 
 variable "k8s_service_account_name" {
-  description = "Optional: Kubernetes Service Account name to scope the EKS OIDC trust relationship to. Use '*' for any service account in any namespace (less secure)."
+  description = "Kubernetes Service Account name for EKS OIDC trust relationship"
   type        = string
-  default     = "*" # Default allows any service account - refine if needed for better security
+  default     = "*"
 }
 
-# --- Tags ---
+variable "iam_roles" {
+  description = "Map of IAM roles to create, with assume role policy and optional tags"
+  type = map(object({
+    rolename              = string
+    assume_role_policy    = string
+    managed_policy_arns   = optional(list(string), [])
+    inline_policies       = optional(map(string), {})
+    tags                  = optional(map(string), {})
+  }))
+  default = {}
+}
+
 variable "common_tags" {
-  description = "Common tags to apply to all IAM resources that support tagging"
+  description = "Common tags to apply to all IAM resources"
   type        = map(string)
   default     = {}
 }
